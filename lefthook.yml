@@ -1,0 +1,14 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: lint
+      run: pnpm lint {staged_files}
+      glob: "*.{js,ts,mjs,cjs,astro}"
+    - name: format
+      run: pnpm format --check {staged_files}
+      glob: "*.{js,ts,mjs,cjs,astro,json,yaml,yml}"
+
+commit-msg:
+  jobs:
+    - name: commitlint
+      run: pnpm commitlint --edit {1}
