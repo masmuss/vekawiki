@@ -7,6 +7,7 @@ export interface TagEntry {
     id: string;
     title: string;
     description: string;
+    growthStage: string;
     updatedAt: Date;
   }>;
 }
@@ -29,6 +30,7 @@ export async function getTags(): Promise<TagEntry[]> {
         id: note.id,
         title: note.data.title,
         description: note.data.description || "",
+        growthStage: note.data.growthStage || "",
         updatedAt: note.data.updatedAt,
       });
     }
