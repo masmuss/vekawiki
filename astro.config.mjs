@@ -24,7 +24,7 @@ const BEJAMAS_ASTRO_FONTS = [
   {
     provider: fontProviders.google(),
     name: "Spectral",
-    cssVariable: "--font-heading",
+    cssVariable: "--font-serif",
     subsets: ["latin"],
   },
 ];
