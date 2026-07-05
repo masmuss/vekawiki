@@ -1,0 +1,111 @@
+---
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Kbd } from "@/components/ui/kbd";
+import { Search, LoaderCircle } from "@lucide/astro";
+---
+
+<Dialog id="search-dialog" closeOnEscape lockScroll>
+  <DialogContent
+    showCloseButton={false}
+    class="sm:max-w-2xl p-0 gap-0 overflow-hidden"
+  >
+    <div class="border-border relative flex items-center border-b px-4">
+      <Search class="text-muted-foreground h-5 w-5 shrink-0" />
+      <input
+        data-search-input
+        type="text"
+        placeholder="Search notes..."
+        class="placeholder:text-muted-foreground h-12 w-full bg-transparent px-4 text-sm outline-none"
+      />
+      <div data-search-spinner class="hidden mr-2 shrink-0">
+        <LoaderCircle class="text-primary h-4 w-4 animate-spin" />
+      </div>
+      <Button
+        data-search-esc
+        type="button"
+        variant="outline"
+        size="sm"
+        class="text-[10px] shrink-0"
+      >
+        ESC
+      </Button>
+    </div>
+
+    <div data-search-results>
+      <div data-search-hint class="text-muted-foreground py-12 text-center">
+        <p class="text-sm">Search articles, projects, and more...</p>
+      </div>
+
+      <div data-search-empty class="hidden py-12 text-center"></div>
+
+      <div data-search-status class="hidden px-3 pt-3">
+        <span
+          data-search-count
+          class="text-muted-foreground text-xs font-medium tracking-wider uppercase"
+        ></span>
+      </div>
+
+      <div
+        data-search-list
+        class="hidden max-h-[60vh] space-y-1 overflow-y-auto p-2"
+        role="listbox"
+        aria-label="Search results"
+      >
+      </div>
+    </div>
+
+    <div
+      class="border-border bg-muted/50 text-muted-foreground flex items-center justify-between border-t px-4 py-2 text-xs"
+    >
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-1">
+          <Kbd>↵</Kbd> select
+        </span>
+        <span class="flex items-center gap-1">
+          <Kbd>↑↓</Kbd> navigate
+        </span>
+      </div>
+      <div class="flex items-center gap-1">
+        Search by <span class="text-primary font-semibold">Pagefind</span>
+      </div>
+    </div>
+  </DialogContent>
+</Dialog>
+
+<style is:global>
+  #search-dialog [data-search-list] {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+  #search-dialog [data-search-list]::-webkit-scrollbar {
+    width: 8px;
+  }
+  #search-dialog [data-search-list]::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #search-dialog [data-search-list]::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+  #search-dialog [data-search-list]::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+  #search-dialog [data-search-result] mark {
+    background-color: color-mix(
+      in oklab,
+      var(--color-primary) 20%,
+      transparent
+    );
+    color: var(--color-primary);
+    border-radius: 0.125rem;
+    padding: 0 0.125rem;
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  import { initSearch } from "@/lib/search/search-client";
+  const dialog = document.getElementById("search-dialog");
+  if (dialog) initSearch(dialog);
+</script>

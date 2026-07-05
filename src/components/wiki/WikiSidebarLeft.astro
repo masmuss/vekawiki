@@ -5,7 +5,11 @@ import { Kbd } from "@/components/ui/kbd";
 ---
 
 <StickySurface class="top-8">
-  <Button variant="outline" class="w-full flex justify-between items-center">
+  <Button
+    variant="outline"
+    class="w-full flex justify-between items-center"
+    onclick="window.__openSearch?.()"
+  >
     <span>Search wiki</span>
     <Kbd>⌘K</Kbd>
   </Button>

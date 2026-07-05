@@ -1,7 +1,7 @@
 @import "tailwindcss";
+@import "bejamas/tailwind.css";
 @plugin "@tailwindcss/typography";
 @import "tw-animate-css";
-@import "bejamas/tailwind.css";
 @import "./prose.css";
 
 @custom-variant dark (&:is(.dark *));

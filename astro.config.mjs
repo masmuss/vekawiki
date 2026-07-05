@@ -3,6 +3,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
 import { fileURLToPath } from "url";
 import path from "path";
+import pagefind from "astro-pagefind";
+import { SITE } from "./src/lib/site-config";
 
 // bejamas:astro-fonts:start
 /** @type {NonNullable<import("astro/config").AstroUserConfig["fonts"]>} */
@@ -25,6 +27,7 @@ const BEJAMAS_ASTRO_FONTS = [
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  site: SITE.url,
   fonts: BEJAMAS_ASTRO_FONTS,
   vite: {
     plugins: [tailwindcss()],
@@ -34,6 +37,7 @@ export default defineConfig({
       },
     },
   },
+  integrations: [pagefind()],
   markdown: {
     shikiConfig: {
       themes: {

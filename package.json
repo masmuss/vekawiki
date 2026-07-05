@@ -17,10 +17,12 @@
     "prepare": "lefthook install"
   },
   "dependencies": {
+    "@data-slot/dialog": "^0.2.166",
     "@lucide/astro": "^1.23.0",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.2",
     "astro": "^7.0.6",
+    "astro-pagefind": "^2.0.1",
     "bejamas": "^0.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
