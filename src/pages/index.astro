@@ -1,77 +1,44 @@
 ---
-import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Kbd } from "@/components/ui/kbd";
 import { SITE } from "@/lib/site-config";
+import { getCategorizedNotes } from "@/lib/wiki/get-categorized-notes";
+import NoteCard from "@/components/wiki/NoteCard.astro";
 
-const allNotes = await getCollection("wiki");
-
-const pinnedNotes = allNotes.filter((note) => note.data.isPinned);
-
-const recentNotes = allNotes
-  .sort((a, b) => b.data.updatedAt.valueOf() - a.data.updatedAt.valueOf())
-  .slice(0, 5);
+const categories = await getCategorizedNotes();
 ---
 
 <BaseLayout title={`${SITE.title} - Home`}>
-  <main class="max-w-3xl mx-auto px-4 py-16 md:py-24" data-pagefind-body>
-    <header class="mb-12">
-      <h1 class="text-4xl font-bold tracking-tight mb-4">{SITE.name}</h1>
-      <p class="text-lg text-muted-foreground">
-        A minimalist digital garden. Press <Kbd class="mx-1">⌘K</Kbd> anytime to search
-        my collection of notes.
+  <main class="mx-auto max-w-5xl px-4 py-16 md:py-24" data-pagefind-body>
+    <header class="mb-16">
+      <h1 class="text-3xl font-bold tracking-tight md:text-4xl">
+        {SITE.name}
+      </h1>
+      <p class="mt-3 text-muted-foreground">
+        A living collection of notes. Press <Kbd class="mx-1">⌘K</Kbd> anytime to
+        search.
       </p>
     </header>
 
-    <section class="mb-12">
-      <h2 class="text-xl font-semibold border-b border-border pb-2 mb-4">
-        📌 Pinned Notes
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {
-          pinnedNotes.map((note) => (
-            <a href={`/wiki/${note.id}`} class="block group">
-              <Card class="p-4 transition-colors hover:border-primary">
-                <h3 class="font-medium group-hover:text-primary transition-colors">
-                  {note.data.title}
-                </h3>
-                <div class="mt-2 flex gap-2">
-                  <Badge variant="secondary" class="text-xs">
-                    {note.data.growthStage}
-                  </Badge>
-                </div>
-              </Card>
-            </a>
-          ))
-        }
-      </div>
-    </section>
-
-    <section>
-      <h2 class="text-xl font-semibold border-b border-border pb-2 mb-4">
-        🌱 Recently Updated
-      </h2>
-      <ul class="space-y-3">
-        {
-          recentNotes.map((note) => (
-            <li class="flex justify-between items-baseline gap-4">
-              <a
-                href={`/wiki/${note.id}`}
-                class="text-foreground hover:text-primary hover:underline decoration-border underline-offset-4"
-              >
-                {note.data.title}
-              </a>
-              <span class="text-sm text-muted-foreground whitespace-nowrap shrink-0">
-                {new Intl.DateTimeFormat("en-US", {
-                  dateStyle: "medium",
-                }).format(note.data.updatedAt)}
-              </span>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+    {
+      categories.map(({ name, notes }) => (
+        <section class="mb-14">
+          <h2 class="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            {name} &middot; {notes.length}{" "}
+            {notes.length === 1 ? "note" : "notes"}
+          </h2>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {notes.map((note) => (
+              <NoteCard
+                id={note.id}
+                title={note.title}
+                description={note.description}
+                growthStage={note.growthStage}
+              />
+            ))}
+          </div>
+        </section>
+      ))
+    }
   </main>
 </BaseLayout>
