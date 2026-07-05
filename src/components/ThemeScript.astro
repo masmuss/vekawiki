@@ -1,12 +1,13 @@
 <script is:inline>
-  const theme = (() => {
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme");
-    }
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
-    }
-    return "light";
-  })();
-  if (theme === "dark") document.documentElement.classList.add("dark");
+  function applyTheme() {
+    const theme =
+      localStorage.getItem("theme") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light");
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }
+
+  applyTheme();
+  document.addEventListener("astro:after-swap", applyTheme);
 </script>
