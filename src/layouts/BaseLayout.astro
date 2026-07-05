@@ -13,11 +13,7 @@ interface Props {
   image?: string;
 }
 
-const {
-  title,
-  description = SITE.description,
-  image = SITE.image,
-} = Astro.props;
+const { title, description = SITE.description } = Astro.props;
 ---
 
 <!doctype html>

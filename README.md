@@ -28,7 +28,7 @@ Run these commands in your terminal to clone the template and start a local serv
 
 ```bash
 # 1. Clone this repository (or use degit)
-pnpm dlx degit masmuss/vekawiki my-wiki
+pnpm dlx degit masmuss/veka my-wiki
 
 # 2. Enter the directory
 cd my-wiki

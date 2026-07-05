@@ -7,7 +7,7 @@ import pagefind from "astro-pagefind";
 import { SITE } from "./src/lib/site-config";
 
 // bejamas:astro-fonts:start
-/** @type {NonNullable<import("astro/config").AstroUserConfig["fonts"]>} */
+/** @type {any} */
 const BEJAMAS_ASTRO_FONTS = [
   {
     provider: fontProviders.google(),

@@ -6,10 +6,7 @@ import WikiSidebarLeft from "@/components/wiki/WikiSidebarLeft.astro";
 import WikiSidebarRight from "@/components/wiki/WikiSidebarRight.astro";
 import BaseLayout from "./BaseLayout.astro";
 import { SITE } from "@/lib/site-config";
-import {
-  generateBreadcrumbs,
-  type Breadcrumb,
-} from "@/lib/wiki/generate-breadcrumbs";
+import { generateBreadcrumbs } from "@/lib/wiki/generate-breadcrumbs";
 
 interface Heading {
   depth: number;
@@ -122,7 +119,7 @@ const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
 </style>
 
 <script>
-  let tocObserver = null;
+  let tocObserver: IntersectionObserver | null = null;
 
   document.addEventListener("astro:page-load", () => {
     if (tocObserver) {
@@ -168,7 +165,7 @@ const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
         },
       );
 
-      headings.forEach((h) => tocObserver.observe(h));
+      headings.forEach((h) => tocObserver?.observe(h));
     }
   });
 </script>

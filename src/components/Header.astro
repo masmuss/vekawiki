@@ -55,9 +55,11 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
   }
 
   document.addEventListener("click", (e) => {
-    const toggle = e.target.closest("#nav-toggle");
-    const closeBtn = e.target.closest("#mobile-nav-close");
-    const backdrop = e.target.closest("#mobile-nav-backdrop");
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+    const toggle = target.closest("#nav-toggle");
+    const closeBtn = target.closest("#mobile-nav-close");
+    const backdrop = target.closest("#mobile-nav-backdrop");
 
     if (toggle) {
       toggleNav();
