@@ -2,16 +2,20 @@
 import { StickySurface } from "@/components/ui/sticky-surface";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
+import ThemeToggle from "@/components/ThemeToggle.astro";
 ---
 
 <StickySurface class="top-8">
-  <Button
-    variant="outline"
-    class="w-full flex justify-between items-center"
-    onclick="window.__openSearch?.()"
-  >
-    <span>Search wiki</span>
-    <Kbd>⌘K</Kbd>
-  </Button>
+  <div class="flex items-center gap-2">
+    <Button
+      variant="outline"
+      class="flex-1 flex justify-between items-center"
+      onclick="window.__openSearch?.()"
+    >
+      <span>Search wiki</span>
+      <Kbd>⌘K</Kbd>
+    </Button>
+    <ThemeToggle />
+  </div>
   <nav class="space-y-1"></nav>
 </StickySurface>
