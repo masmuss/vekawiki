@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+
+interface FlatItem {
+  label: string;
+  href: string;
+  depth: number;
+}
+
+const allNotes = (await getCollection("wiki")).filter(
+  (note) => note.id !== "index",
+);
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
+
+function humanize(slug: string): string {
+  return slug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function flattenTree(notes: typeof allNotes): FlatItem[] {
+  const groups: Record<string, FlatItem[]> = {};
+
+  for (const note of notes) {
+    const segments = note.id.split("/");
+    const category = segments[0];
+
+    if (!groups[category]) groups[category] = [];
+
+    if (segments.length === 1) {
+      groups[category].push({
+        label: note.data.title,
+        href: `/wiki/${note.id}`,
+        depth: 1,
+      });
+    } else {
+      const subPath = segments.slice(1, -1).map(humanize).join(" / ");
+      const label = subPath
+        ? `${subPath} / ${note.data.title}`
+        : note.data.title;
+      groups[category].push({
+        label,
+        href: `/wiki/${note.id}`,
+        depth: segments.length,
+      });
+    }
+  }
+
+  return Object.entries(groups)
+    .sort(([, a], [, b]) => b.length - a.length)
+    .flatMap(([category, items]) => [
+      { label: humanize(category), href: "", depth: 0 },
+      ...items.sort((a, b) => a.label.localeCompare(b.label)),
+    ]);
+}
+
+const items = flattenTree(allNotes);
+---
+
+<nav class="space-y-0.5">
+  {
+    items.map((item) => {
+      const isCategory = item.depth === 0;
+      const isActive =
+        item.href && currentPath === item.href.replace(/\/$/, "");
+
+      if (isCategory) {
+        return (
+          <span class="block pb-1 pt-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground first:pt-0">
+            {item.label}
+          </span>
+        );
+      }
+
+      return (
+        <a
+          href={item.href}
+          class:list={[
+            "block text-sm leading-snug transition-colors rounded py-0.5",
+            item.depth > 1 ? "ml-3" : "",
+            isActive
+              ? "font-medium text-primary"
+              : "text-muted-foreground hover:text-foreground",
+          ]}
+        >
+          {item.label}
+        </a>
+      );
+    })
+  }
+</nav>
