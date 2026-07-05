@@ -44,7 +44,7 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
     html.setAttribute(NAV_ATTR, isOpen ? "false" : "true");
     document.body.style.overflow = isOpen ? "" : "hidden";
     const nav = document.getElementById("mobile-nav");
-    if (nav) nav.inert = !isOpen;
+    if (nav) nav.inert = isOpen;
   }
 
   function closeNav() {
