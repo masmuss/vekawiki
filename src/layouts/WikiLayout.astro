@@ -59,3 +59,47 @@ const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  const headings = document.querySelectorAll(
+    "article.custom-prose h2, article.custom-prose h3, article.custom-prose h4",
+  );
+  const tocLinks = new Map<string, HTMLElement>();
+
+  document.querySelectorAll("[data-toc]").forEach((el) => {
+    const slug = el.getAttribute("data-toc");
+    if (slug) tocLinks.set(slug, el as HTMLElement);
+  });
+
+  if (headings.length > 0 && tocLinks.size > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length === 0) return;
+
+        const top = visible.reduce((a, b) =>
+          a.boundingClientRect.top < b.boundingClientRect.top ? a : b,
+        );
+
+        const slug = top.target.getAttribute("id");
+        if (!slug) return;
+
+        tocLinks.forEach((link, s) => {
+          if (s === slug) {
+            link.classList.add("text-primary", "font-medium");
+            link.classList.remove("text-muted-foreground");
+          } else {
+            link.classList.remove("text-primary", "font-medium");
+            link.classList.add("text-muted-foreground");
+          }
+        });
+      },
+      {
+        rootMargin: "-80px 0px -60% 0px",
+        threshold: 0,
+      },
+    );
+
+    headings.forEach((h) => observer.observe(h));
+  }
+</script>

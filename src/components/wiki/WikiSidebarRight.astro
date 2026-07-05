@@ -33,6 +33,7 @@ function tocIndent(depth: number): string {
           {tocHeadings.map((h) => (
             <a
               href={`#${h.slug}`}
+              data-toc={h.slug}
               class:list={[
                 "block text-sm leading-snug transition-colors rounded py-0.5",
                 tocIndent(h.depth),
