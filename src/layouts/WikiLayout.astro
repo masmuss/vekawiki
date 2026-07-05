@@ -31,7 +31,7 @@ const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
       <main class="min-w-0">
         <WikiHeader {title} {breadcrumbs} {growthStage} {updatedAt} />
 
-        <article class="prose prose-stone dark:prose-invert max-w-none">
+        <article class="custom-prose max-w-none">
           <slot />
         </article>
       </main>
