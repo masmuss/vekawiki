@@ -3,6 +3,7 @@ import WikiHeader from "@/components/wiki/WikiHeader.astro";
 import WikiSidebarLeft from "@/components/wiki/WikiSidebarLeft.astro";
 import WikiSidebarRight from "@/components/wiki/WikiSidebarRight.astro";
 import BaseLayout from "./BaseLayout.astro";
+import { SITE } from "@/lib/site-config";
 import {
   generateBreadcrumbs,
   type Breadcrumb,
@@ -19,7 +20,7 @@ const { title, description, growthStage, updatedAt } = Astro.props;
 const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
 ---
 
-<BaseLayout title={title} description={`${description} - Vekawiki`}>
+<BaseLayout title={title} description={`${description} - ${SITE.name}`}>
   <div class="min-h-screen bg-background text-foreground">
     <div
       class="grid grid-cols-1 md:grid-cols-[250px_1fr_250px] gap-8 max-w-7xl mx-auto px-4 py-8 relative"
