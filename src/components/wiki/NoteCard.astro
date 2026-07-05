@@ -1,0 +1,38 @@
+---
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+interface Props {
+  id: string;
+  title: string;
+  description?: string;
+  growthStage: string;
+}
+
+const { id, title, description, growthStage } = Astro.props;
+---
+
+<a href={`/wiki/${id}`} class="group block">
+  <Card class="h-full hover:ring-primary">
+    <CardHeader class="font-medium leading-snug">
+      {title}
+    </CardHeader>
+    {
+      description && (
+        <CardContent class="text-sm text-muted-foreground line-clamp-2">
+          {description}
+        </CardContent>
+      )
+    }
+    <CardFooter class="flex items-center gap-2">
+      <Badge variant="secondary" class="text-[11px] leading-none">
+        {growthStage}
+      </Badge>
+    </CardFooter>
+  </Card>
+</a>

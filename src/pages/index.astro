@@ -1,33 +1,11 @@
 ---
-import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Kbd } from "@/components/ui/kbd";
 import { SITE } from "@/lib/site-config";
+import { getCategorizedNotes } from "@/lib/wiki/get-categorized-notes";
+import NoteCard from "@/components/wiki/NoteCard.astro";
 
-const allNotes = await getCollection("wiki");
-
-const categoryNotes = allNotes
-  .filter((note) => note.id !== "index")
-  .reduce(
-    (acc, note) => {
-      const category = note.id.split("/")[0];
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(note);
-      return acc;
-    },
-    {} as Record<string, typeof allNotes>,
-  );
-
-const categories = Object.entries(categoryNotes)
-  .map(([name, notes]) => ({
-    name,
-    notes: notes.sort(
-      (a, b) => b.data.updatedAt.valueOf() - a.data.updatedAt.valueOf(),
-    ),
-  }))
-  .sort((a, b) => b.notes.length - a.notes.length);
+const categories = await getCategorizedNotes();
 ---
 
 <BaseLayout title={`${SITE.title} - Home`}>
@@ -51,23 +29,12 @@ const categories = Object.entries(categoryNotes)
           </h2>
           <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {notes.map((note) => (
-              <a href={`/wiki/${note.id}`} class="group block">
-                <Card class="h-full p-4 transition-colors hover:border-primary">
-                  <h3 class="font-medium leading-snug group-hover:text-primary transition-colors">
-                    {note.data.title}
-                  </h3>
-                  {note.data.description && (
-                    <p class="mt-1.5 text-sm text-muted-foreground line-clamp-2">
-                      {note.data.description}
-                    </p>
-                  )}
-                  <div class="mt-3 flex items-center gap-2">
-                    <Badge variant="secondary" class="text-[11px] leading-none">
-                      {note.data.growthStage}
-                    </Badge>
-                  </div>
-                </Card>
-              </a>
+              <NoteCard
+                id={note.id}
+                title={note.title}
+                description={note.description}
+                growthStage={note.growthStage}
+              />
             ))}
           </div>
         </section>
