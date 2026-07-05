@@ -2,9 +2,9 @@
 
 **The Minimalist Digital Garden & Wiki Starter for Astro.**
 
-Astro Garden bukanlah pesaing kerangka dokumentasi raksasa. Ini adalah antitesisnya. Dibangun khusus untuk Anda yang menginginkan tempat mencatat, _digital garden_, atau wiki personal yang sangat cepat, organik, dan bebas dari konfigurasi _routing_ yang kaku.
+Astro Garden is not a competitor to massive documentation frameworks. It is the antithesis. Built specifically for those who want a fast, organic place to take notes — a digital garden or personal wiki — free from rigid routing configuration.
 
-Lempar file Markdown Anda ke dalam folder, dan biarkan sistem merajutnya secara otomatis.
+Drop your Markdown files into the folder, and let the system weave them together automatically.
 
 ![Astro](https://img.shields.io/badge/Astro-3.0+-FF7E33?style=flat-square&logo=astro&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
@@ -12,73 +12,73 @@ Lempar file Markdown Anda ke dalam folder, dan biarkan sistem merajutnya secara 
 
 ---
 
-## ⚡ Mengapa Menggunakan Astro Garden?
+## ⚡ Why Astro Garden?
 
-- **Zero-Config Routing:** Tidak perlu mendaftarkan navigasi di file `config`. Buat folder sedalam apa pun (contoh: `src/content/wiki/koding/arsitektur/`), dan URL beserta navigasi _sidebar_ akan terbuat secara otomatis.
-- **Static Search Ultra-Cepat:** Menggunakan [Pagefind](https://pagefind.app/). Pencarian diindeks secara lokal saat proses _build_ tanpa memerlukan layanan pihak ketiga.
-- **Zod Schema Validation:** _Frontmatter_ dijaga ketat. Tidak ada lagi eror saat _build_ hanya karena Anda lupa memasukkan judul atau salah format tanggal.
-- **Konsep "Digital Garden":** Dilengkapi dengan properti `growthStage` (`seedling`, `budding`, `evergreen`) untuk melacak tingkat kematangan setiap catatan Anda.
-- **100% Lighthouse Score:** UI dibangun secara selektif menggunakan komponen minimalis dan _Vanilla JS_ murni untuk interaktivitas, memastikan tidak ada _runtime bloat_.
+- **Zero-Config Routing:** No need to register navigation in a config file. Create folders as deep as you like (e.g. `src/content/wiki/koding/arsitektur/`), and URLs with sidebar navigation are generated automatically.
+- **Ultra-Fast Static Search:** Powered by [Pagefind](https://pagefind.app/). Search is indexed locally during the build process — no third-party services required.
+- **Zod Schema Validation:** Frontmatter is strictly validated. No more build errors from a missing title or incorrectly formatted date.
+- **"Digital Garden" Concept:** Comes with a `growthStage` property (`seedling`, `budding`, `evergreen`) to track the maturity level of each note.
+- **100% Lighthouse Score:** The UI is built selectively using minimal components and vanilla JS for interactivity, ensuring zero runtime bloat.
 
 ---
 
-## 🚀 Quick Start (Kurang dari 1 Menit)
+## 🚀 Quick Start (Under 1 Minute)
 
-Jalankan perintah ini di terminal Anda untuk mengkloning _template_ dan memulai server lokal:
+Run these commands in your terminal to clone the template and start a local server:
 
 ```bash
-# 1. Clone repositori ini (atau gunakan degit)
-npx degit your-username/astro-garden my-wiki
+# 1. Clone this repository (or use degit)
+pnpm dlx degit masmuss/vekawiki my-wiki
 
-# 2. Masuk ke direktori
+# 2. Enter the directory
 cd my-wiki
 
-# 3. Install dependensi
-npm install
+# 3. Install dependencies
+pnpm install
 
-# 4. Jalankan server lokal
-npm run dev
+# 4. Start the local server
+pnpm run dev
 ```
 
-Catatan Penting untuk Fitur Pencarian: > Fitur pencarian Pagefind bekerja dengan membaca file statis hasil build. Untuk menguji pencarian secara lokal, Anda harus menjalankan npm run build diikuti dengan npm run preview.
+Important Note for Search Features: Pagefind search works by reading the static build output. To test search locally, you must run npm run build followed by npm run preview.
 
-## 📝 Cara Menulis Catatan
+## 📝 How to Write Notes
 
-Semua catatan Anda hidup di dalam direktori src/content/wiki/. Anda bebas membuat sub-direktori baru. Setiap file .md atau .mdx wajib memiliki frontmatter berikut:
+All your notes live in the `src/content/wiki/` directory. Feel free to create new sub-directories. Every `.md` or `.mdx` file must include the following frontmatter:
 
 ```plaintext
 ---
-title: "Judul Catatan Anda"
-description: "Penjelasan singkat untuk SEO dan cuplikan pencarian."
+title: "Your Note Title"
+description: "Brief description for SEO and search snippets."
 createdAt: 2026-07-05
 updatedAt: 2026-07-05
-tags: ["konsep", "ide"]
+tags: ["concept", "idea"]
 isPinned: false
-growthStage: "seedling" # Pilihan: seedling | budding | evergreen
+growthStage: "seedling" # Options: seedling | budding | evergreen
 ---
 
-Tulis isi pikiran Anda di sini menggunakan Markdown...
+Write your thoughts here using Markdown...
 ```
 
-## 🏗️ Struktur Proyek
+## 🏗️ Project Structure
 
 ```plaintext
 ├── src/
 │   ├── content/
-│   │   ├── config.ts       # Validasi skema Zod
-│   │   └── wiki/           # Kumpulan folder dan file markdown Anda
+│   │   ├── config.ts       # Zod schema validation
+│   │   └── wiki/           # Your markdown files and folders
 │   ├── layouts/
-│   │   ├── BaseLayout.astro # Kerangka HTML murni (SEO & Meta)
-│   │   └── WikiLayout.astro # Grid 3-Kolom (Navigasi, Konten, TOC)
+│   │   ├── BaseLayout.astro # Pure HTML shell (SEO & Meta)
+│   │   └── WikiLayout.astro # 3-Column Grid (Nav, Content, TOC)
 │   └── pages/
-│       ├── index.astro      # Pusat Kendali / Beranda
+│       ├── index.astro      # Dashboard / Home
 │       └── wiki/
-│           └── [...slug].astro # Mesin penggerak routing dinamis
+│           └── [...slug].astro # Dynamic routing engine
 └── tailwind.config.mjs
 ```
 
 ## 🌍 Deployment
 
-Astro Garden dikonfigurasi sebagai Static Site Generator (SSG) secara bawaan. Proses deployment sangat mulus di platform seperti Vercel, Netlify, atau Cloudflare Pages.
-Pastikan perintah build Anda di platform target disetel ke: `npm run build`
-Perintah ini secara otomatis akan menjalankan astro build lalu memicu integrasi pagefind untuk membangun indeks pencarian.
+Astro Garden is configured as a Static Site Generator (SSG) by default. Deployment is seamless on platforms like Vercel, Netlify, or Cloudflare Pages.
+Make sure your build command on the target platform is set to: `pnpm run build`
+This command will automatically run `astro build` and trigger the pagefind integration to build the search index.
