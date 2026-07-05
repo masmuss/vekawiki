@@ -1,4 +1,5 @@
 ---
+import { Menu } from "@lucide/astro";
 import { SITE } from "@/lib/site-config";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
@@ -7,9 +8,18 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
 
 <header class="sticky top-0 z-40 bg-background/80 backdrop-blur-sm">
   <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-6">
-    <a href="/" class="font-serif text-lg font-semibold tracking-tight"
-      >{SITE.name}</a
-    >
+    <div class="flex items-center gap-1">
+      <button
+        id="nav-toggle"
+        class="md:hidden inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+        aria-label="Toggle navigation"
+      >
+        <Menu class="size-5" />
+      </button>
+      <a href="/" class="font-serif text-lg font-semibold tracking-tight"
+        >{SITE.name}</a
+      >
+    </div>
     <div class="flex items-center gap-2">
       <Button
         variant="outline"
@@ -24,3 +34,49 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
     </div>
   </div>
 </header>
+
+<script>
+  const NAV_ATTR = "data-mobile-nav";
+
+  function toggleNav() {
+    const html = document.documentElement;
+    const isOpen = html.getAttribute(NAV_ATTR) === "true";
+    html.setAttribute(NAV_ATTR, isOpen ? "false" : "true");
+    document.body.style.overflow = isOpen ? "" : "hidden";
+    const nav = document.getElementById("mobile-nav");
+    if (nav) nav.inert = isOpen;
+  }
+
+  function closeNav() {
+    document.documentElement.setAttribute(NAV_ATTR, "false");
+    document.body.style.overflow = "";
+    const nav = document.getElementById("mobile-nav");
+    if (nav) nav.inert = true;
+  }
+
+  document.addEventListener("click", (e) => {
+    const toggle = e.target.closest("#nav-toggle");
+    const closeBtn = e.target.closest("#mobile-nav-close");
+    const backdrop = e.target.closest("#mobile-nav-backdrop");
+
+    if (toggle) {
+      toggleNav();
+      return;
+    }
+
+    if (document.documentElement.getAttribute(NAV_ATTR) !== "true") return;
+
+    if (closeBtn || backdrop) {
+      closeNav();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (
+      e.key === "Escape" &&
+      document.documentElement.getAttribute(NAV_ATTR) === "true"
+    ) {
+      closeNav();
+    }
+  });
+</script>

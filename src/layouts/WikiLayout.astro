@@ -1,5 +1,7 @@
 ---
+import { X } from "@lucide/astro";
 import WikiHeader from "@/components/wiki/WikiHeader.astro";
+import WikiNav from "@/components/wiki/WikiNav.astro";
 import WikiSidebarLeft from "@/components/wiki/WikiSidebarLeft.astro";
 import WikiSidebarRight from "@/components/wiki/WikiSidebarRight.astro";
 import BaseLayout from "./BaseLayout.astro";
@@ -57,49 +59,116 @@ const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
         <WikiSidebarRight headings={headings} {tags} />
       </aside>
     </div>
+
+    <!-- Mobile nav drawer -->
+    <div id="mobile-nav" class="fixed inset-0 z-50 md:hidden" inert>
+      <div
+        id="mobile-nav-backdrop"
+        class="fixed inset-0 bg-black/30 backdrop-blur-sm"
+      >
+      </div>
+      <div
+        id="mobile-nav-panel"
+        class="fixed inset-y-0 left-0 z-10 flex w-72 max-w-[80vw] flex-col bg-background border-r border-border shadow-lg"
+      >
+        <div
+          class="flex items-center justify-between border-b border-border h-16 px-4"
+        >
+          <span class="font-serif text-lg font-semibold tracking-tight"
+            >Navigation</span
+          >
+          <button
+            id="mobile-nav-close"
+            class="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            aria-label="Close navigation"
+          >
+            <X class="size-5" />
+          </button>
+        </div>
+        <div class="flex-1 overflow-y-auto px-4 py-4">
+          <WikiNav />
+        </div>
+      </div>
+    </div>
   </div>
 </BaseLayout>
 
-<script>
-  const headings = document.querySelectorAll(
-    "article.custom-prose h2, article.custom-prose h3, article.custom-prose h4",
-  );
-  const tocLinks = new Map<string, HTMLElement>();
-
-  document.querySelectorAll("[data-toc]").forEach((el) => {
-    const slug = el.getAttribute("data-toc");
-    if (slug) tocLinks.set(slug, el as HTMLElement);
-  });
-
-  if (headings.length > 0 && tocLinks.size > 0) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length === 0) return;
-
-        const top = visible.reduce((a, b) =>
-          a.boundingClientRect.top < b.boundingClientRect.top ? a : b,
-        );
-
-        const slug = top.target.getAttribute("id");
-        if (!slug) return;
-
-        tocLinks.forEach((link, s) => {
-          if (s === slug) {
-            link.classList.add("text-primary", "font-medium");
-            link.classList.remove("text-muted-foreground");
-          } else {
-            link.classList.remove("text-primary", "font-medium");
-            link.classList.add("text-muted-foreground");
-          }
-        });
-      },
-      {
-        rootMargin: "-80px 0px -60% 0px",
-        threshold: 0,
-      },
-    );
-
-    headings.forEach((h) => observer.observe(h));
+<style is:global>
+  #mobile-nav {
+    pointer-events: none;
   }
+
+  #mobile-nav-backdrop {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  #mobile-nav-panel {
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+
+  html[data-mobile-nav="true"] #mobile-nav {
+    pointer-events: auto;
+  }
+
+  html[data-mobile-nav="true"] #mobile-nav-backdrop {
+    opacity: 1;
+  }
+
+  html[data-mobile-nav="true"] #mobile-nav-panel {
+    transform: translateX(0);
+  }
+</style>
+
+<script>
+  let tocObserver = null;
+
+  document.addEventListener("astro:page-load", () => {
+    if (tocObserver) {
+      tocObserver.disconnect();
+    }
+
+    const headings = document.querySelectorAll(
+      "article.custom-prose h2, article.custom-prose h3, article.custom-prose h4",
+    );
+    const tocLinks = new Map();
+
+    document.querySelectorAll("[data-toc]").forEach((el) => {
+      const slug = el.getAttribute("data-toc");
+      if (slug) tocLinks.set(slug, el);
+    });
+
+    if (headings.length > 0 && tocLinks.size > 0) {
+      tocObserver = new IntersectionObserver(
+        (entries) => {
+          const visible = entries.filter((e) => e.isIntersecting);
+          if (visible.length === 0) return;
+
+          const top = visible.reduce((a, b) =>
+            a.boundingClientRect.top < b.boundingClientRect.top ? a : b,
+          );
+
+          const slug = top.target.getAttribute("id");
+          if (!slug) return;
+
+          tocLinks.forEach((link, s) => {
+            if (s === slug) {
+              link.classList.add("text-primary", "font-medium");
+              link.classList.remove("text-muted-foreground");
+            } else {
+              link.classList.remove("text-primary", "font-medium");
+              link.classList.add("text-muted-foreground");
+            }
+          });
+        },
+        {
+          rootMargin: "-80px 0px -60% 0px",
+          threshold: 0,
+        },
+      );
+
+      headings.forEach((h) => tocObserver.observe(h));
+    }
+  });
 </script>

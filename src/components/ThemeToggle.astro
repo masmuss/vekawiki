@@ -15,8 +15,9 @@ import { Moon, Sun } from "@lucide/astro";
 </Button>
 
 <script>
-  const btn = document.getElementById("theme-toggle");
-  btn?.addEventListener("click", () => {
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("#theme-toggle");
+    if (!btn) return;
     const isDark = document.documentElement.classList.toggle("dark");
     localStorage.setItem("theme", isDark ? "dark" : "light");
   });

@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import "@/assets/styles/global.css";
 import { Font } from "astro:assets";
 import ThemeScript from "@/components/ThemeScript.astro";
@@ -35,6 +36,7 @@ const {
     <meta name="description" content={description} />
 
     <ThemeScript />
+    <ClientRouter />
   </head>
   <body
     class="bg-background text-foreground min-h-screen selection:bg-primary/30 selection:text-primary"
