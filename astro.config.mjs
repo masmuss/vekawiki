@@ -8,8 +8,7 @@ import { SITE } from "./src/lib/site-config";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import wikiLink from "remark-wiki-link";
-import remarkSupersub from "remark-supersub";
-import { remarkHighlightMark } from "remark-highlight-mark";
+import { remarkCustomSyntax } from "./src/lib/wiki/remark-custom-syntax.mjs";
 import { remarkAlert } from "remark-github-blockquote-alert";
 import { unified } from "@astrojs/markdown-remark";
 // bejamas:astro-fonts:start
@@ -52,15 +51,7 @@ export default defineConfig({
 	integrations: [pagefind()],
 	markdown: {
 		processor: unified({
-			remarkPlugins: [
-				remarkMath,
-				wikiLink,
-				// @ts-ignore
-				remarkSupersub,
-				// @ts-ignore
-				remarkHighlightMark,
-				remarkAlert,
-			],
+			remarkPlugins: [remarkMath, wikiLink, remarkCustomSyntax, remarkAlert],
 			rehypePlugins: [rehypeKatex],
 		}),
 		shikiConfig: {

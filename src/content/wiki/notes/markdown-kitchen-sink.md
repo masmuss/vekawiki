@@ -139,7 +139,7 @@ Orange
 ## Highlights and Sub/Superscripts
 
 You can highlight text like ==this==.
-Subscript: H~~2~~O
+Subscript: H,,2,,O
 Superscript: X^2^
 
 ## Keyboard Keys
