@@ -10,6 +10,10 @@ Drop your Markdown files into the folder, and let the system weave them together
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
 ![Pagefind](https://img.shields.io/badge/Search-Pagefind-blue?style=flat-square)
 
+![Veka Dashboard Preview](./public/preview-home.png)
+![Note Preview](./public/preview-note.png)
+![Note Preview](./public/preview-note-2.png)
+
 ---
 
 ## ⚡ Why Veka?
