@@ -140,7 +140,11 @@
     }
 
     mark {
-      background-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+      background-color: color-mix(
+        in oklab,
+        var(--color-accent) 40%,
+        transparent
+      );
       color: var(--color-foreground);
       border-radius: 0.25rem;
       padding: 0 0.25rem;

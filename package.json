@@ -45,6 +45,7 @@
     "prettier": "^3.9.4",
     "prettier-plugin-astro": "^0.14.1",
     "rehype-katex": "^7.0.1",
+    "remark-deflist": "^1.0.0",
     "remark-github-blockquote-alert": "^2.1.0",
     "remark-highlight-mark": "^1.4.0",
     "remark-math": "^6.0.0",

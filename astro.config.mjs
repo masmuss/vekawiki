@@ -10,6 +10,7 @@ import rehypeKatex from "rehype-katex";
 import wikiLink from "remark-wiki-link";
 import { remarkCustomSyntax } from "./src/lib/wiki/remark-custom-syntax.mjs";
 import { remarkAlert } from "remark-github-blockquote-alert";
+import remarkDeflist from "remark-deflist";
 import { unified } from "@astrojs/markdown-remark";
 // bejamas:astro-fonts:start
 /** @type {any} */
@@ -51,7 +52,13 @@ export default defineConfig({
 	integrations: [pagefind()],
 	markdown: {
 		processor: unified({
-			remarkPlugins: [remarkMath, wikiLink, remarkCustomSyntax, remarkAlert],
+			remarkPlugins: [
+				remarkMath,
+				wikiLink,
+				remarkDeflist,
+				remarkCustomSyntax,
+				remarkAlert,
+			],
 			rehypePlugins: [rehypeKatex],
 		}),
 		shikiConfig: {
