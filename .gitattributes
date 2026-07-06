@@ -1,0 +1,3 @@
+lefthook.yml export-ignore
+commitlint.config.mjs export-ignore
+.github/ export-ignore

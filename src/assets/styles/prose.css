@@ -77,6 +77,53 @@
       );
     }
 
+    .markdown-alert {
+      border-left-width: 4px;
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      background-color: color-mix(
+        in oklab,
+        var(--color-muted) 30%,
+        transparent
+      );
+      margin-block: 1rem;
+      font-style: normal;
+    }
+    .markdown-alert-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .markdown-alert-title svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: currentColor;
+      color: inherit;
+    }
+    .markdown-alert-title svg path {
+      fill: currentColor;
+    }
+    .markdown-alert-note {
+      border-color: var(--color-primary);
+    }
+    .markdown-alert-note .markdown-alert-title {
+      color: var(--color-primary);
+    }
+    .markdown-alert-warning {
+      border-color: var(--color-accent);
+    }
+    .markdown-alert-warning .markdown-alert-title {
+      color: var(--color-accent);
+    }
+    .markdown-alert-caution {
+      border-color: var(--color-destructive);
+    }
+    .markdown-alert-caution .markdown-alert-title {
+      color: var(--color-destructive);
+    }
+
     :not(pre) > code {
       background-color: color-mix(
         in oklab,
@@ -90,6 +137,38 @@
       font-size: 0.8125em;
       border: 1px solid
         color-mix(in oklab, var(--color-border) 50%, transparent);
+    }
+
+    :not(pre) > code::before,
+    :not(pre) > code::after {
+      content: "";
+    }
+
+    mark {
+      background-color: color-mix(
+        in oklab,
+        var(--color-accent) 40%,
+        transparent
+      );
+      color: var(--color-foreground);
+      border-radius: 0.25rem;
+      padding: 0 0.25rem;
+    }
+
+    sub,
+    sup {
+      font-size: 0.75em;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+    }
+
+    sub {
+      bottom: -0.25em;
+    }
+
+    sup {
+      top: -0.5em;
     }
 
     pre {
