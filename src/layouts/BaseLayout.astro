@@ -21,7 +21,9 @@ const { title, description = SITE.description } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href={SITE.favicon} />
+    <link rel="icon" type="image/x-icon" href={SITE.favicon} />
+    <meta name="theme-color" content="#f8f5f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#161514" media="(prefers-color-scheme: dark)" />
 
     <Font cssVariable="--font-sans" />
     <Font cssVariable="--font-mono" />
@@ -31,9 +33,17 @@ const { title, description = SITE.description } = Astro.props;
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      />
+    </noscript>
 
     <ThemeScript />
     <ClientRouter />
