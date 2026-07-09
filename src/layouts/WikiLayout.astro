@@ -22,6 +22,8 @@ interface Props {
   updatedAt: Date;
   headings?: Heading[];
   tags?: string[];
+  rawContent?: string;
+  downloadFilename?: string;
 }
 
 const {
@@ -31,6 +33,8 @@ const {
   updatedAt,
   headings = [],
   tags = [],
+  rawContent,
+  downloadFilename,
 } = Astro.props;
 
 const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
@@ -46,7 +50,14 @@ const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
       </aside>
 
       <main class="min-w-0">
-        <WikiHeader {title} {breadcrumbs} {growthStage} {updatedAt} />
+        <WikiHeader
+          {title}
+          {breadcrumbs}
+          {growthStage}
+          {updatedAt}
+          {rawContent}
+          {downloadFilename}
+        />
 
         <article class="custom-prose max-w-none" data-pagefind-body>
           <slot />
