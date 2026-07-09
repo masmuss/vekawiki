@@ -78,13 +78,14 @@ const items = flattenTree(allNotes);
         <a
           href={item.href}
           class:list={[
-            "block text-sm leading-snug transition-colors rounded py-0.5",
+            "block text-sm leading-snug transition-colors rounded py-px",
             item.depth > 1 ? "ml-3" : "",
             isActive
               ? "font-medium text-primary"
               : "text-muted-foreground hover:text-foreground",
           ]}
         >
+          {isActive && <span class="mr-1">&mdash;</span>}
           {item.label}
         </a>
       );

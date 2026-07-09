@@ -7,6 +7,7 @@ import WikiSidebarRight from "@/components/wiki/WikiSidebarRight.astro";
 import BaseLayout from "./BaseLayout.astro";
 import { SITE } from "@/lib/site-config";
 import { generateBreadcrumbs } from "@/lib/wiki/generate-breadcrumbs";
+import { Button } from "@/components/ui/button";
 
 interface Heading {
   depth: number;
@@ -38,7 +39,7 @@ const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
 <BaseLayout title={title} description={`${description} - ${SITE.name}`}>
   <div class="min-h-screen bg-background text-foreground">
     <div
-      class="grid grid-cols-1 md:grid-cols-[250px_1fr_250px] gap-8 max-w-7xl mx-auto px-4 py-8 relative"
+      class="grid grid-cols-1 md:grid-cols-[250px_1fr_250px] gap-8 max-w-7xl mx-auto px-4 relative"
     >
       <aside class="hidden md:block">
         <WikiSidebarLeft />
@@ -74,13 +75,14 @@ const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
           <span class="font-serif text-lg font-semibold tracking-tight"
             >Navigation</span
           >
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             id="mobile-nav-close"
-            class="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
             aria-label="Close navigation"
           >
             <X class="size-5" />
-          </button>
+          </Button>
         </div>
         <div class="flex-1 overflow-y-auto px-4 py-4">
           <WikiNav />
