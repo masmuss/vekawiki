@@ -27,6 +27,8 @@ const { title, description, updatedAt, tags, growthStage } = entry.data;
   tags={tags}
   updatedAt={updatedAt}
   growthStage={growthStage}
+  rawContent={entry.body}
+  downloadFilename={entry.id.split("/").pop()}
 >
   <article class="custom-prose max-w-none">
     <Content />
