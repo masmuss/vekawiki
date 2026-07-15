@@ -3,3 +3,4 @@ dist/
 node_modules/
 pnpm-lock.yaml
 src/components/ui/sticky-surface/
+CHANGELOG.md
