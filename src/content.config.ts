@@ -4,7 +4,7 @@ import { defineCollection } from "astro:content";
 
 const wiki = defineCollection({
   loader: glob({
-    pattern: "**/**/*.md",
+    pattern: "**/**/*.{md,mdx}",
     base: "./src/content/wiki",
   }),
   schema: z.object({

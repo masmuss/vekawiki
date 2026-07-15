@@ -13,6 +13,8 @@ import { wikiLinkOptions } from "./src/lib/wiki/wiki-link-resolver.mjs";
 import { remarkCustomSyntax } from "./src/lib/wiki/remark-custom-syntax.mjs";
 import { remarkAlert } from "remark-github-blockquote-alert";
 import remarkDeflist from "remark-deflist";
+import mdx from "@astrojs/mdx";
+
 // bejamas:astro-fonts:start
 /** @type {any} */
 const BEJAMAS_ASTRO_FONTS = [
@@ -50,7 +52,7 @@ export default defineConfig({
       },
     },
   },
-  integrations: [pagefind()],
+  integrations: [pagefind(), mdx()],
   markdown: {
     processor: unified({
       remarkPlugins: [

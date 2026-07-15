@@ -16,8 +16,11 @@ function buildWikiLinksMap() {
     const wikiFiles = fs.readdirSync(contentWikiPath, { recursive: true });
 
     for (const file of wikiFiles) {
-      if (typeof file === "string" && file.endsWith(".md")) {
-        const slug = file.replace(/\.md$/, "");
+      if (
+        typeof file === "string" &&
+        (file.endsWith(".md") || file.endsWith(".mdx"))
+      ) {
+        const slug = file.replace(/\.(md|mdx)?$/, "");
         const basename = path.basename(slug);
         wikiLinksMap.set(basename.toLowerCase(), slug);
       }
