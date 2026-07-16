@@ -14,7 +14,7 @@ Drop your Markdown files into the folder, and let the system weave them together
 ![Note Preview](./public/preview-note.png)
 ![Note Preview](./public/preview-note-2.png)
 
-Production demo available at [veka-9tg.pages.dev](https://veka-9tg.pages.dev) or [wiki.khoirul.me](https://wiki.khoirul.me)
+Production demo available at [demo-veka.khoirul.me](https://demo-veka.khoirul.me) or [wiki.khoirul.me](https://wiki.khoirul.me)
 
 ---
 
