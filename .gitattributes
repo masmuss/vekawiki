@@ -1,4 +1,9 @@
 lefthook.yml export-ignore
 commitlint.config.mjs export-ignore
 .github/ export-ignore
+.releaserc.json export-ignore
+AGENTS.md export-ignore
+CLAUDE.md export-ignore
+.vscode/ export-ignore
+.fallow/ export-ignore
 pnpm-workspace.yaml export-ignore
