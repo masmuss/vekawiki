@@ -1,0 +1,69 @@
+---
+import { Font } from "astro:assets";
+import ThemeScript from "@/components/ThemeScript.astro";
+import Seo from "@/components/seo/Seo.astro";
+import { SITE } from "@/lib/site-config";
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  pageType?: "website" | "article";
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  tags?: string[];
+}
+
+const {
+  title,
+  description = SITE.description,
+  image,
+  pageType,
+  publishedTime,
+  modifiedTime,
+  tags,
+} = Astro.props;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/x-icon" href={SITE.favicon} />
+<meta
+  name="theme-color"
+  content="#f8f5f0"
+  media="(prefers-color-scheme: light)"
+/>
+<meta
+  name="theme-color"
+  content="#161514"
+  media="(prefers-color-scheme: dark)"
+/>
+
+<Seo
+  {title}
+  {description}
+  {image}
+  {pageType}
+  {publishedTime}
+  {modifiedTime}
+  {tags}
+/>
+
+<Font cssVariable="--font-sans" />
+<Font cssVariable="--font-mono" />
+<Font cssVariable="--font-heading" />
+
+<link
+  rel="preload"
+  as="style"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<noscript>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+  />
+</noscript>
+
+<ThemeScript />

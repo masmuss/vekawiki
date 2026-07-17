@@ -5,7 +5,6 @@ import WikiNav from "@/components/wiki/WikiNav.astro";
 import WikiSidebarLeft from "@/components/wiki/WikiSidebarLeft.astro";
 import WikiSidebarRight from "@/components/wiki/WikiSidebarRight.astro";
 import BaseLayout from "./BaseLayout.astro";
-import { SITE } from "@/lib/site-config";
 import { generateBreadcrumbs } from "@/lib/wiki/generate-breadcrumbs";
 import { Button } from "@/components/ui/button";
 
@@ -19,6 +18,7 @@ interface Props {
   title: string;
   description: string;
   growthStage: string;
+  createdAt: Date;
   updatedAt: Date;
   headings?: Heading[];
   tags?: string[];
@@ -30,6 +30,7 @@ const {
   title,
   description,
   growthStage,
+  createdAt,
   updatedAt,
   headings = [],
   tags = [],
@@ -40,7 +41,14 @@ const {
 const breadcrumbs = generateBreadcrumbs(Astro.url.pathname);
 ---
 
-<BaseLayout title={title} description={`${description} - ${SITE.name}`}>
+<BaseLayout
+  title={title}
+  description={description}
+  pageType="article"
+  publishedTime={createdAt}
+  modifiedTime={updatedAt}
+  tags={tags}
+>
   <div class="min-h-screen bg-background text-foreground">
     <div
       class="grid grid-cols-1 md:grid-cols-[0.5fr_1fr_250px] max-w-10/12 md:gap-8 lg:gap-16 mx-auto px-4 relative md:pb-12 lg:pb-20"

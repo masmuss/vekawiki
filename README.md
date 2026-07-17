@@ -70,18 +70,50 @@ Write your thoughts here using Markdown...
 
 ```plaintext
 ├── src/
+│   ├── components/
+│   │   ├── seo/             # Seo.astro, JsonLd.astro
+│   │   └── shell/           # BaseHead.astro, Header.astro
 │   ├── content/
-│   │   ├── config.ts       # Zod schema validation
-│   │   └── wiki/           # Your markdown files and folders
+│   │   ├── config.ts        # Zod schema validation
+│   │   └── wiki/            # Your markdown files and folders
 │   ├── layouts/
-│   │   ├── BaseLayout.astro # Pure HTML shell (SEO & Meta)
+│   │   ├── BaseLayout.astro # HTML shell, delegates head to BaseHead
 │   │   └── WikiLayout.astro # 3-Column Grid (Nav, Content, TOC)
+│   ├── lib/
+│   │   ├── seo.ts           # Title/description normalization & canonical URL
+│   │   └── site-config.ts   # Site-wide configuration (name, URL, OG image, etc.)
 │   └── pages/
 │       ├── index.astro      # Dashboard / Home
 │       └── wiki/
 │           └── [...slug].astro # Dynamic routing engine
-└── tailwind.config.mjs
+└── astro.config.mjs
 ```
+
+## ⚙️ Configuration
+
+Edit `src/lib/site-config.ts` to customize your site identity. All fields are used for SEO meta tags, Open Graph, and JSON-LD structured data.
+
+```ts
+export const SITE = {
+  name: "Veka", // Site name (used in <title> suffix & og:site_name)
+  title: "Veka", // Default page title
+  description: "Minimalist Digital Garden", // Fallback meta description
+  author: "Veka", // JSON-LD author
+  url: "https://veka-9tg.pages.dev", // Canonical base URL
+  image: "/og-image.png", // Default Open Graph image
+  favicon: "/favicon.svg", // Favicon path
+};
+```
+
+SEO features (auto-generated per page):
+
+- `<title>` normalization — appends `" | Veka"` if not present, truncates at 60 chars
+- Description normalization — enforces 120–160 character range
+- Open Graph tags (`og:title`, `og:description`, `og:image`, `og:type`, `og:url`, `og:site_name`)
+- Twitter Card tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`)
+- Canonical URL — strips hash and trailing slash
+- JSON-LD structured data — `WebSite` for all pages, `Article` for wiki notes (with `datePublished`, `dateModified`, `keywords`)
+- Article metadata — `article:published_time`, `article:modified_time`, `article:tag` for wiki pages
 
 ## 🌍 Deployment
 

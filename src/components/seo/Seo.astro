@@ -1,0 +1,87 @@
+---
+import JsonLd from "./JsonLd.astro";
+import { SITE } from "@/lib/site-config";
+import {
+  formatCanonicalURL,
+  normalizeDescription,
+  normalizeTitle,
+} from "@/lib/seo";
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  pageType?: "website" | "article";
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  tags?: string[];
+}
+
+const {
+  title: rawTitle,
+  description: rawDescription,
+  image,
+  pageType = "website",
+  publishedTime,
+  modifiedTime,
+  tags,
+} = Astro.props;
+
+const title = normalizeTitle(rawTitle, SITE.name);
+const description = normalizeDescription(rawDescription, SITE.description);
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const formattedCanonical = formatCanonicalURL(canonicalURL);
+const ogImage = image
+  ? new URL(image, Astro.site).toString()
+  : new URL(SITE.image, Astro.site).toString();
+---
+
+<!-- Primary -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<link rel="canonical" href={formattedCanonical} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={pageType} />
+<meta property="og:url" content={formattedCanonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:site_name" content={SITE.name} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={formattedCanonical} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+{
+  pageType === "article" && publishedTime && (
+    <meta
+      property="article:published_time"
+      content={publishedTime.toISOString()}
+    />
+  )
+}
+{
+  pageType === "article" && modifiedTime && (
+    <meta
+      property="article:modified_time"
+      content={modifiedTime.toISOString()}
+    />
+  )
+}
+{tags?.map((tag) => <meta property="article:tag" content={tag} />)}
+
+<!-- JSON-LD -->
+<JsonLd
+  {title}
+  {description}
+  {image}
+  {publishedTime}
+  {modifiedTime}
+  {tags}
+  {pageType}
+/>

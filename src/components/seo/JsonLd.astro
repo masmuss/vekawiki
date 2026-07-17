@@ -1,0 +1,69 @@
+---
+import { SITE } from "@/lib/site-config";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  tags?: string[];
+  pageType?: "website" | "article";
+}
+
+const {
+  title,
+  description,
+  image,
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  pageType = "website",
+} = Astro.props;
+
+const siteUrl = Astro.site ? Astro.site.toString() : SITE.url;
+const canonicalUrl = Astro.url.href;
+
+const graph: Record<string, unknown>[] = [
+  {
+    "@type": "WebSite",
+    "@id": `${siteUrl}#website`,
+    url: siteUrl,
+    name: SITE.name,
+    description: SITE.description,
+  },
+];
+
+if (pageType === "article") {
+  graph.push({
+    "@type": "Article",
+    headline: title,
+    description,
+    image: image ?? new URL(SITE.image, siteUrl).toString(),
+    datePublished: publishedTime?.toISOString(),
+    dateModified: modifiedTime?.toISOString() || publishedTime?.toISOString(),
+    author: {
+      "@type": "Person",
+      name: SITE.author ?? SITE.name,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE.name,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+    },
+    keywords: tags.length > 0 ? tags.join(", ") : undefined,
+  });
+}
+---
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": graph,
+  })}
+/>
