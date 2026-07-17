@@ -7,6 +7,7 @@ import {
 import { ChevronRight } from "@lucide/astro";
 import WikiNavNode from "./WikiNavNode.astro";
 import { cn } from "@/lib/utils";
+import { sortTreeNodes } from "@/lib/wiki/tree-utils";
 
 export interface TreeNode {
   label: string;
@@ -23,28 +24,21 @@ interface Props {
 
 const { node, class: className, depth, currentPath } = Astro.props;
 
-const childrenKeys = Object.keys(node.children).sort((a, b) => {
-  const nodeA = node.children[a];
-  const nodeB = node.children[b];
-  const isAFolder = Object.keys(nodeA.children).length > 0;
-  const isBFolder = Object.keys(nodeB.children).length > 0;
-
-  if (!isAFolder && isBFolder) return -1;
-  if (isAFolder && !isBFolder) return 1;
-
-  return nodeA.label.localeCompare(nodeB.label);
-});
+const childrenKeys = sortTreeNodes(node.children);
 const hasChildren = childrenKeys.length > 0;
 const isActive = node.href && currentPath === node.href.replace(/\/$/, "");
 const isFolder = !node.href && hasChildren;
 const isRootCategory = isFolder && depth === 0;
 
-function getIndentClass(depth: number) {
-  if (depth === 1) return "ml-3";
-  if (depth === 2) return "ml-6";
-  if (depth === 3) return "ml-9";
-  if (depth === 4) return "ml-12";
-  return "";
+const INDENT_CLASSES: Record<number, string> = {
+  1: "ml-3",
+  2: "ml-6",
+  3: "ml-9",
+  4: "ml-12",
+};
+
+function getIndentClass(depth: number): string {
+  return INDENT_CLASSES[depth] ?? "";
 }
 
 function isChildActive(n: TreeNode): boolean {
