@@ -16,6 +16,13 @@ interface PagefindModule {
   search: (query: string) => Promise<{ results: PagefindSearchResult[] }>;
 }
 
+function normalizeResultUrl(r: PagefindResultData): PagefindResultData {
+  return {
+    ...r,
+    url: r.url.replace("/dist/", "/").replace(/\/$/, ""),
+  };
+}
+
 class SearchController {
   private dialogRoot: HTMLElement;
   private isOpen = false;
@@ -178,24 +185,29 @@ class SearchController {
     }, 300);
   }
 
+  private isCurrentRequest(requestId: number): boolean {
+    return requestId === this.searchRequestId;
+  }
+
+  private applySearchResults(raw: PagefindResultData[]): void {
+    this.results = raw.map(normalizeResultUrl);
+    this.selectedIndex = this.results.length > 0 ? 0 : -1;
+  }
+
   private async executeSearch(trimmed: string, requestId: number) {
-    if (requestId !== this.searchRequestId) return;
+    if (!this.isCurrentRequest(requestId)) return;
 
     try {
       const raw = await this.fetchPagefindData(trimmed, requestId);
-      if (requestId !== this.searchRequestId) return;
+      if (!this.isCurrentRequest(requestId)) return;
 
-      this.results = raw.map((r) => ({
-        ...r,
-        url: r.url.replace("/dist/", "/").replace(/\/$/, ""),
-      }));
-      this.selectedIndex = this.results.length > 0 ? 0 : -1;
+      this.applySearchResults(raw);
     } catch (e) {
-      if (requestId === this.searchRequestId) {
+      if (this.isCurrentRequest(requestId)) {
         console.error("Search failed", e);
       }
     } finally {
-      if (requestId === this.searchRequestId) {
+      if (this.isCurrentRequest(requestId)) {
         this.isSearching = false;
         this.render();
       }
@@ -337,21 +349,18 @@ class SearchController {
   }
 
   private handleNavigation(e: KeyboardEvent) {
-    switch (e.key) {
-      case "ArrowDown":
-        e.preventDefault();
-        this.navigateSelection(1);
-        break;
-      case "ArrowUp":
-        e.preventDefault();
-        this.navigateSelection(-1);
-        break;
-      case "Enter":
-        if (this.selectedIndex >= 0) {
-          e.preventDefault();
-          this.navigateToSelectedResult();
-        }
-        break;
+    const keyActions: Record<string, () => void> = {
+      ArrowDown: () => this.navigateSelection(1),
+      ArrowUp: () => this.navigateSelection(-1),
+      Enter: () => {
+        if (this.selectedIndex >= 0) this.navigateToSelectedResult();
+      },
+    };
+
+    const action = keyActions[e.key];
+    if (action) {
+      e.preventDefault();
+      action();
     }
   }
 
