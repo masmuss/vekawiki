@@ -28,6 +28,16 @@ const {
   rawContent,
   downloadFilename,
 } = Astro.props;
+
+function formatBreadcrumbLabel(label: string): string {
+  return label.replace(/-/g, " ");
+}
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", { dateStyle: "medium" });
+}
+
+const showDownload = rawContent && downloadFilename;
 ---
 
 <header class="mb-10">
@@ -39,9 +49,9 @@ const {
         breadcrumbs.map((breadcrumb, index) => (
           <>
             <BreadcrumbItem>
-              {breadcrumb.label.replace(/-/g, " ")}
+              {formatBreadcrumbLabel(breadcrumb.label)}
             </BreadcrumbItem>
-            {index !== breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+            {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
           </>
         ))
       }
@@ -53,13 +63,11 @@ const {
     <div class="flex items-center gap-3">
       <Badge variant="secondary">{growthStage}</Badge>
       <span class="text-sm text-muted-foreground">
-        Last update on {
-          updatedAt.toLocaleDateString("en-US", { dateStyle: "medium" })
-        }
+        Last update on {formatDate(updatedAt)}
       </span>
     </div>
     {
-      rawContent && downloadFilename && (
+      showDownload && (
         <Button
           as="a"
           href={`data:text/markdown;charset=utf-8,${encodeURIComponent(rawContent)}`}

@@ -10,6 +10,71 @@ const folderIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="1
 
 const fileIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5 shrink-0 text-foreground/70"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>`;
 
+function stripParagraphWrapper(html: string): string {
+  return html
+    .replace(/^<p>/, "")
+    .replace(/<\/p>$/, "")
+    .trim();
+}
+
+function classifyChildren(li: any): { nestedUl: any; labelText: string } {
+  let nestedUl = null;
+  const labelNodes: any[] = [];
+
+  for (const child of li.childNodes) {
+    if (child.nodeType === 1 && child.tagName === "UL") {
+      nestedUl = child;
+    } else {
+      labelNodes.push(child);
+    }
+  }
+
+  const labelText = stripParagraphWrapper(
+    labelNodes
+      .map((n: any) => n.toString())
+      .join("")
+      .trim(),
+  );
+
+  return { nestedUl, labelText };
+}
+
+function resolveItemType(
+  labelText: string,
+  hasNestedUl: boolean,
+): { isDir: boolean; cleanLabel: string } {
+  const isDir = labelText.endsWith("/") || hasNestedUl;
+  const cleanLabel =
+    isDir && labelText.endsWith("/")
+      ? labelText.slice(0, -1).trim()
+      : labelText;
+  return { isDir, cleanLabel };
+}
+
+function renderFolderHtml(cleanLabel: string, nestedUlHtml: string): string {
+  return `
+    <details open class="group/details">
+      <summary class="flex items-center cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden hover:text-primary transition-colors text-sm font-medium py-0.5">
+        <span class="group-open/details:rotate-90 transition-transform mr-1 text-muted-foreground shrink-0">
+          ${chevronIcon}
+        </span>
+        ${folderIcon}
+        ${cleanLabel}
+      </summary>
+      ${nestedUlHtml}
+    </details>
+  `;
+}
+
+function renderFileHtml(cleanLabel: string): string {
+  return `
+    <div class="flex items-center text-sm text-muted-foreground ml-[18px] py-0.5 hover:text-foreground transition-colors">
+      ${fileIcon}
+      <span>${cleanLabel}</span>
+    </div>
+  `;
+}
+
 function processList(ul: any) {
   ul.setAttribute(
     "class",
@@ -18,55 +83,12 @@ function processList(ul: any) {
 
   const lis = ul.querySelectorAll(":scope > li");
   for (const li of lis) {
-    let nestedUl = null;
-    let labelNodes = [];
+    const { nestedUl, labelText } = classifyChildren(li);
+    const { isDir, cleanLabel } = resolveItemType(labelText, nestedUl !== null);
 
-    for (const child of li.childNodes) {
-      if (child.nodeType === 1 && child.tagName === "UL") {
-        nestedUl = child;
-      } else {
-        labelNodes.push(child);
-      }
-    }
-
-    let labelText = labelNodes
-      .map((n: any) => n.toString())
-      .join("")
-      .trim();
-
-    // Clear <p> tags if the markdown renderer wraps text in paragraphs
-    labelText = labelText
-      .replace(/^<p>/, "")
-      .replace(/<\/p>$/, "")
-      .trim();
-
-    const isDir = labelText.endsWith("/") || nestedUl !== null;
-    const cleanLabel =
-      isDir && labelText.endsWith("/")
-        ? labelText.slice(0, -1).trim()
-        : labelText;
-
-    if (isDir) {
-      li.innerHTML = `
-        <details open class="group/details">
-          <summary class="flex items-center cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden hover:text-primary transition-colors text-sm font-medium py-0.5">
-            <span class="group-open/details:rotate-90 transition-transform mr-1 text-muted-foreground shrink-0">
-              ${chevronIcon}
-            </span>
-            ${folderIcon}
-            ${cleanLabel}
-          </summary>
-          ${nestedUl ? nestedUl.outerHTML : ""}
-        </details>
-      `;
-    } else {
-      li.innerHTML = `
-        <div class="flex items-center text-sm text-muted-foreground ml-[18px] py-0.5 hover:text-foreground transition-colors">
-          ${fileIcon}
-          <span>${cleanLabel}</span>
-        </div>
-      `;
-    }
+    li.innerHTML = isDir
+      ? renderFolderHtml(cleanLabel, nestedUl ? nestedUl.outerHTML : "")
+      : renderFileHtml(cleanLabel);
 
     const newNestedUl = li.querySelector(":scope > details > ul");
     if (newNestedUl) {
