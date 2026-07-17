@@ -1,0 +1,27 @@
+---
+interface Props {
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  tags?: string[];
+}
+
+const { publishedTime, modifiedTime, tags } = Astro.props;
+---
+
+{
+  publishedTime && (
+    <meta
+      property="article:published_time"
+      content={publishedTime.toISOString()}
+    />
+  )
+}
+{
+  modifiedTime && (
+    <meta
+      property="article:modified_time"
+      content={modifiedTime.toISOString()}
+    />
+  )
+}
+{tags?.map((tag) => <meta property="article:tag" content={tag} />)}

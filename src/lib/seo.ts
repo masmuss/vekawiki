@@ -2,11 +2,10 @@ const TITLE_MAX_LENGTH = 60;
 const DESCRIPTION_MIN_LENGTH = 120;
 const DESCRIPTION_MAX_LENGTH = 160;
 const TITLE_SEPARATOR = " | ";
+const DESCRIPTION_PADDING =
+  ". A living collection of interconnected notes on software engineering, tools, and ideas.";
 
-export function truncateByWordBoundary(
-  text: string,
-  maxLength: number,
-): string {
+function truncateByWordBoundary(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   const sliced = text.slice(0, maxLength + 1);
   const cutIndex = Math.max(
@@ -50,7 +49,7 @@ export function normalizeDescription(
 
   if (base.length < DESCRIPTION_MIN_LENGTH) {
     return truncateByWordBoundary(
-      `${base}. A living collection of interconnected notes on software engineering, tools, and ideas.`,
+      `${base}${DESCRIPTION_PADDING}`,
       DESCRIPTION_MAX_LENGTH - 3,
     );
   }
