@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import WikiNavNode, { type TreeNode } from "./WikiNavNode.astro";
+import { sortTreeNodes } from "@/lib/wiki/tree-utils";
 
 const allNotes = await getCollection("wiki");
 const currentPath = Astro.url.pathname.replace(/\/$/, "");
@@ -10,6 +11,27 @@ function humanize(slug: string): string {
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
+}
+
+function makeTreeNode(
+  segment: string,
+  isFile: boolean,
+  note: (typeof allNotes)[number],
+): TreeNode {
+  return {
+    label: isFile ? note.data.title : humanize(segment),
+    href: isFile
+      ? note.id === "index"
+        ? "/wiki"
+        : `/wiki/${note.id}`
+      : undefined,
+    children: {},
+  };
+}
+
+function updateFileNode(node: TreeNode, note: (typeof allNotes)[number]): void {
+  node.href = note.id === "index" ? "/wiki" : `/wiki/${note.id}`;
+  node.label = note.data.title;
 }
 
 function buildTree(notes: typeof allNotes): Record<string, TreeNode> {
@@ -23,19 +45,9 @@ function buildTree(notes: typeof allNotes): Record<string, TreeNode> {
       const isFile = i === segments.length - 1;
 
       if (!currentLevel[segment]) {
-        currentLevel[segment] = {
-          label: isFile ? note.data.title : humanize(segment),
-          href: isFile
-            ? note.id === "index"
-              ? "/wiki"
-              : `/wiki/${note.id}`
-            : undefined,
-          children: {},
-        };
+        currentLevel[segment] = makeTreeNode(segment, isFile, note);
       } else if (isFile) {
-        currentLevel[segment].href =
-          note.id === "index" ? "/wiki" : `/wiki/${note.id}`;
-        currentLevel[segment].label = note.data.title;
+        updateFileNode(currentLevel[segment], note);
       }
       currentLevel = currentLevel[segment].children;
     }
@@ -45,17 +57,7 @@ function buildTree(notes: typeof allNotes): Record<string, TreeNode> {
 }
 
 const root = buildTree(allNotes);
-const sortedRootKeys = Object.keys(root).sort((a, b) => {
-  const nodeA = root[a];
-  const nodeB = root[b];
-  const isAFolder = Object.keys(nodeA.children).length > 0;
-  const isBFolder = Object.keys(nodeB.children).length > 0;
-
-  if (!isAFolder && isBFolder) return -1;
-  if (isAFolder && !isBFolder) return 1;
-
-  return nodeA.label.localeCompare(nodeB.label);
-});
+const sortedRootKeys = sortTreeNodes(root);
 ---
 
 <nav class="space-y-0.5">
