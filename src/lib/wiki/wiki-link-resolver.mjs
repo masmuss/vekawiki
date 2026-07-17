@@ -4,6 +4,12 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+function isMarkdownFile(file) {
+  return (
+    typeof file === "string" && (file.endsWith(".md") || file.endsWith(".mdx"))
+  );
+}
+
 /**
  * Builds a map of wiki filenames to their full relative paths.
  * E.g. "git-workflow" -> "notes/git-workflow"
@@ -16,10 +22,7 @@ function buildWikiLinksMap() {
     const wikiFiles = fs.readdirSync(contentWikiPath, { recursive: true });
 
     for (const file of wikiFiles) {
-      if (
-        typeof file === "string" &&
-        (file.endsWith(".md") || file.endsWith(".mdx"))
-      ) {
+      if (isMarkdownFile(file)) {
         const slug = file.replace(/\.(md|mdx)?$/, "");
         const basename = path.basename(slug);
         wikiLinksMap.set(basename.toLowerCase(), slug);
