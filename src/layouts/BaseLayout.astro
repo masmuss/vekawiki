@@ -1,8 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import "@/assets/styles/global.css";
-import { Font } from "astro:assets";
-import ThemeScript from "@/components/ThemeScript.astro";
+import BaseHead from "@/components/shell/BaseHead.astro";
 import Header from "@/components/Header.astro";
 import Search from "@/components/search/Search.astro";
 import { SITE } from "@/lib/site-config";
@@ -11,49 +10,35 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  pageType?: "website" | "article";
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  tags?: string[];
 }
 
-const { title, description = SITE.description } = Astro.props;
+const {
+  title,
+  description = SITE.description,
+  image,
+  pageType,
+  publishedTime,
+  modifiedTime,
+  tags,
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en" class="antialiased">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href={SITE.favicon} />
-    <meta
-      name="theme-color"
-      content="#f8f5f0"
-      media="(prefers-color-scheme: light)"
+    <BaseHead
+      {title}
+      {description}
+      {image}
+      {pageType}
+      {publishedTime}
+      {modifiedTime}
+      {tags}
     />
-    <meta
-      name="theme-color"
-      content="#161514"
-      media="(prefers-color-scheme: dark)"
-    />
-
-    <Font cssVariable="--font-sans" />
-    <Font cssVariable="--font-mono" />
-    <Font cssVariable="--font-heading" />
-
-    <title>{title}</title>
-    <meta name="title" content={title} />
-    <meta name="description" content={description} />
-    <link
-      rel="preload"
-      as="style"
-      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
-      />
-    </noscript>
-
-    <ThemeScript />
     <ClientRouter />
   </head>
   <body
