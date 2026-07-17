@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "ignoreDependencies": [
+    "@astrojs/mdx",
+    "@tailwindcss/vite",
+    "astro-pagefind",
+    "remark-definition-list"
+  ]
+}

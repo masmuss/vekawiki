@@ -1,6 +1,6 @@
 import type { TreeNode } from "@/components/wiki/WikiNavNode.astro";
 
-export function isTreeNodeFolder(node: TreeNode): boolean {
+function isTreeNodeFolder(node: TreeNode): boolean {
   return Object.keys(node.children).length > 0;
 }
 

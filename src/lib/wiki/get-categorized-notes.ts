@@ -11,12 +11,27 @@ export interface CategorizedNote {
   }>;
 }
 
+function getCategory(noteId: string): string {
+  return noteId === "index" ? "overview" : noteId.split("/")[0];
+}
+
+function byUpdatedAtDesc(
+  a: { updatedAt: Date },
+  b: { updatedAt: Date },
+): number {
+  return b.updatedAt.valueOf() - a.updatedAt.valueOf();
+}
+
+function byNameAsc(a: { name: string }, b: { name: string }): number {
+  return a.name.localeCompare(b.name);
+}
+
 export async function getCategorizedNotes(): Promise<CategorizedNote[]> {
   const allNotes = await getCollection("wiki");
 
   const grouped = allNotes.reduce(
     (acc, note) => {
-      const category = note.id === "index" ? "overview" : note.id.split("/")[0];
+      const category = getCategory(note.id);
       if (!acc[category]) acc[category] = [];
       acc[category].push({
         id: note.id,
@@ -33,9 +48,7 @@ export async function getCategorizedNotes(): Promise<CategorizedNote[]> {
   return Object.entries(grouped)
     .map(([name, notes]) => ({
       name,
-      notes: notes.sort(
-        (a, b) => b.updatedAt.valueOf() - a.updatedAt.valueOf(),
-      ),
+      notes: notes.sort(byUpdatedAtDesc),
     }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort(byNameAsc);
 }
