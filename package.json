@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.3",
+    "@astrojs/sitemap": "^3.7.3",
     "@data-slot/collapsible": "^0.2.166",
     "@data-slot/dialog": "^0.2.166",
     "@lucide/astro": "^1.23.0",
