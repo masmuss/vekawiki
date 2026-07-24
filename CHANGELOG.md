@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/masmuss/veka/compare/v1.1.0...v1.2.0) (2026-07-24)
+
+
+### Features
+
+* add @astrojs/sitemap ([955c57f](https://github.com/masmuss/veka/commit/955c57fd60542117575dd69b75e461bcb6bf4f06))
+
 # [1.1.0](https://github.com/masmuss/veka/compare/v1.0.0...v1.1.0) (2026-07-17)
 
 
