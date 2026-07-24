@@ -15,6 +15,8 @@ import { remarkAlert } from "remark-github-blockquote-alert";
 import { remarkDefinitionList } from "remark-definition-list";
 import mdx from "@astrojs/mdx";
 
+import sitemap from "@astrojs/sitemap";
+
 // bejamas:astro-fonts:start
 /** @type {any} */
 const BEJAMAS_ASTRO_FONTS = [
@@ -52,7 +54,7 @@ export default defineConfig({
       },
     },
   },
-  integrations: [pagefind(), mdx()],
+  integrations: [pagefind(), mdx(), sitemap()],
   markdown: {
     processor: unified({
       remarkPlugins: [
